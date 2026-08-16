@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Result Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Student Result Management</h1>
+        <p class="subtitle">Enter student details and marks</p>
+
+        <form action="/submit" method="POST">
+
+            <label for="name">Student Name</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="roll">Roll Number</label>
+            <input type="text" id="roll" name="roll" required>
+
+            <label for="marks1">Marks 1</label>
+            <input type="number" id="marks1" name="marks1"
+                   min="0" max="100" required>
+
+            <label for="marks2">Marks 2</label>
+            <input type="number" id="marks2" name="marks2"
+                   min="0" max="100" required>
+
+            <label for="marks3">Marks 3</label>
+            <input type="number" id="marks3" name="marks3"
+                   min="0" max="100" required>
+
+            <button type="submit">Calculate Result</button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>
