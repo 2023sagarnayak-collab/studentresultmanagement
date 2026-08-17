@@ -4,12 +4,17 @@
     padding: 0;
 }
 
+
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: #f3f5f8;
+    background: #f4f6f8;
     color: #1f2937;
-    min-height: 100vh;
 }
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
 
 .page {
     min-height: 100vh;
@@ -18,96 +23,145 @@ body {
     align-items: center;
     justify-content: center;
 
-    padding: 24px;
+    padding: 30px 20px;
 }
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
 
 .card {
     width: 100%;
-    max-width: 560px;
+    max-width: 700px;
 
-    background: white;
+    background: #ffffff;
 
-    border: 1px solid #e5e7eb;
+    padding: 40px;
+
     border-radius: 16px;
 
-    padding: 36px;
-
     box-shadow:
-        0 12px 35px rgba(15, 23, 42, 0.08);
+        0 10px 30px rgba(0, 0, 0, 0.08);
 }
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .header {
-    margin-bottom: 28px;
+    text-align: center;
+
+    margin-bottom: 35px;
 }
+
 
 .eyebrow {
-    color: #4f46e5;
-
     font-size: 13px;
-    font-weight: bold;
 
-    letter-spacing: 0.08em;
+    font-weight: 700;
+
     text-transform: uppercase;
 
-    margin-bottom: 8px;
+    letter-spacing: 1.5px;
+
+    color: #2563eb;
+
+    margin-bottom: 10px;
 }
 
-h1 {
-    font-size: 30px;
-    line-height: 1.2;
 
-    margin-bottom: 8px;
+.header h1 {
+    font-size: 32px;
+
+    margin-bottom: 10px;
+
+    color: #111827;
 }
+
 
 .subtitle {
-    color: #6b7280;
-
     font-size: 15px;
-    line-height: 1.5;
+
+    line-height: 1.6;
+
+    color: #6b7280;
 }
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
 
 .result-form {
-    display: flex;
-    flex-direction: column;
-
-    gap: 20px;
+    width: 100%;
 }
+
+
+/* =========================================================
+   FIELD
+   ========================================================= */
 
 .field {
     display: flex;
+
     flex-direction: column;
 
-    gap: 7px;
+    gap: 8px;
 }
 
-label {
+
+.field label {
     font-size: 14px;
-    font-weight: bold;
+
+    font-weight: 600;
+
+    color: #374151;
 }
 
-input {
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.field input {
     width: 100%;
 
-    padding: 12px 13px;
-
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
+    padding: 13px 14px;
 
     font-size: 15px;
 
+    border: 1px solid #d1d5db;
+
+    border-radius: 8px;
+
     outline: none;
 
+    background: #ffffff;
+
     transition:
-        border-color 0.2s,
-        box-shadow 0.2s;
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-input:focus {
-    border-color: #4f46e5;
+
+.field input:focus {
+    border-color: #2563eb;
 
     box-shadow:
-        0 0 0 3px rgba(79, 70, 229, 0.12);
+        0 0 0 3px rgba(37, 99, 235, 0.12);
 }
+
+
+.field input::placeholder {
+    color: #9ca3af;
+}
+
+
+/* =========================================================
+   MARKS GRID
+   ========================================================= */
 
 .marks-grid {
     display: grid;
@@ -115,50 +169,276 @@ input:focus {
     grid-template-columns:
         repeat(3, 1fr);
 
-    gap: 14px;
+    gap: 16px;
+
+    margin-top: 20px;
 }
 
-button {
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
+.result-form button {
     width: 100%;
 
+    margin-top: 28px;
+
+    padding: 14px;
+
     border: none;
+
     border-radius: 8px;
 
-    padding: 13px 16px;
+    background: #2563eb;
 
-    background: #4f46e5;
-    color: white;
+    color: #ffffff;
 
     font-size: 15px;
-    font-weight: bold;
+
+    font-weight: 600;
 
     cursor: pointer;
 
     transition:
-        background 0.2s,
-        transform 0.1s;
+        background 0.2s ease,
+        transform 0.1s ease;
 }
 
-button:hover {
-    background: #4338ca;
+
+.result-form button:hover {
+    background: #1d4ed8;
 }
 
-button:active {
+
+.result-form button:active {
     transform: translateY(1px);
 }
 
+
+/* =========================================================
+   RESULT PAGE - STUDENT INFORMATION
+   ========================================================= */
+
+.student-info {
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+    margin-bottom: 20px;
+
+    text-align: center;
+}
+
+
+.student-info .label {
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.8px;
+
+    color: #6b7280;
+
+    margin-bottom: 8px;
+}
+
+
+.student-info h2 {
+    font-size: 24px;
+
+    color: #111827;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   RESULT BOXES
+   ========================================================= */
+
+.result-box {
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+    text-align: center;
+}
+
+
+.result-box span {
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #6b7280;
+
+    margin-bottom: 10px;
+}
+
+
+.result-box strong {
+    font-size: 28px;
+
+    color: #111827;
+}
+
+
+.result-box small {
+    font-size: 13px;
+
+    color: #6b7280;
+
+    margin-left: 3px;
+}
+
+
+/* =========================================================
+   RESULT SUMMARY
+   ========================================================= */
+
+.summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 16px;
+
+    margin-top: 20px;
+}
+
+
+.summary-item {
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+    text-align: center;
+}
+
+
+.summary-item span {
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: #6b7280;
+
+    margin-bottom: 8px;
+}
+
+
+.summary-item strong {
+    display: block;
+
+    font-size: 24px;
+
+    color: #111827;
+}
+
+
+.summary-item small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #6b7280;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.back-button {
+    display: block;
+
+    width: 100%;
+
+    margin-top: 28px;
+
+    padding: 14px;
+
+    border-radius: 8px;
+
+    border: 1px solid #2563eb;
+
+    color: #2563eb;
+
+    background: #ffffff;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.back-button:hover {
+    background: #2563eb;
+
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
 @media (max-width: 600px) {
 
-    .card {
-        padding: 26px 20px;
+    .page {
+        padding: 20px 15px;
     }
+
+
+    .card {
+        padding: 25px 20px;
+    }
+
+
+    .header h1 {
+        font-size: 27px;
+    }
+
 
     .marks-grid {
         grid-template-columns: 1fr;
     }
 
-    h1 {
-        font-size: 26px;
+
+    .summary {
+        grid-template-columns: 1fr;
     }
 
 }
