@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template
 
-from database import create_database, add_student
+from database import create_database, add_student, get_students
 
 
 app = Flask(__name__)
@@ -56,6 +56,7 @@ def validate_marks(marks):
 
 @app.route("/")
 def home():
+
     return render_template("index.html")
 
 
@@ -87,15 +88,17 @@ def submit():
 
             return "Student name is required.", 400
 
+        name = name.strip()
+
         # ----------------------------------------------------
-        # 3. Convert marks from HTML strings to numbers
+        # 3. Convert HTML input to integers
         # ----------------------------------------------------
 
         try:
 
-            marks1 = float(marks1)
-            marks2 = float(marks2)
-            marks3 = float(marks3)
+            marks1 = int(marks1)
+            marks2 = int(marks2)
+            marks3 = int(marks3)
 
         except (ValueError, TypeError):
 
@@ -156,7 +159,7 @@ def submit():
         }
 
         # ----------------------------------------------------
-        # 8. Display HTML result page
+        # 8. Display result HTML
         # ----------------------------------------------------
 
         return render_template(
@@ -168,6 +171,33 @@ def submit():
 
         return f"""
         <h2>Error processing result</h2>
+        <p>{error}</p>
+        <a href="/">Go Back</a>
+        """, 500
+
+
+# ============================================================
+# VIEW STORED STUDENTS
+# SQLITE → FLASK → HTML
+# ============================================================
+
+@app.route("/students")
+def students():
+
+    try:
+
+        # Get records from Author 3's database.py
+        records = get_students()
+
+        return render_template(
+            "students.html",
+            students=records
+        )
+
+    except Exception as error:
+
+        return f"""
+        <h2>Error retrieving students</h2>
         <p>{error}</p>
         <a href="/">Go Back</a>
         """, 500
