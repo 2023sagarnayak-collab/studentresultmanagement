@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template
 
-from database import create_database, add_student, get_students
+from database import create_database, add_student
 
 
 app = Flask(__name__)
@@ -38,54 +38,16 @@ def calculate_grade(percentage):
 
 
 def validate_marks(marks):
-    """Validate exactly 3 marks between 0 and 100."""
-
-    if not isinstance(marks, list):
-        return False
+    """Validate that exactly 3 marks are between 0 and 100."""
 
     if len(marks) != 3:
         return False
 
     for mark in marks:
-
-        if not isinstance(mark, (int, float)):
-            return False
-
         if mark < 0 or mark > 100:
             return False
 
     return True
-
-
-def process_result(name, marks):
-    """Process student result."""
-
-    if not name or not name.strip():
-        raise ValueError("Student name is required.")
-
-    if not validate_marks(marks):
-        raise ValueError(
-            "Marks must contain exactly 3 values between 0 and 100."
-        )
-
-    total = calculate_total(marks)
-
-    percentage = calculate_percentage(
-        total,
-        len(marks)
-    )
-
-    grade = calculate_grade(percentage)
-
-    return {
-        "name": name,
-        "marks1": marks[0],
-        "marks2": marks[1],
-        "marks3": marks[2],
-        "total": total,
-        "percentage": round(percentage, 2),
-        "grade": grade
-    }
 
 
 # ============================================================
@@ -94,16 +56,12 @@ def process_result(name, marks):
 
 @app.route("/")
 def home():
-    """
-    Display the HTML frontend.
-    Flask looks for templates/index.html.
-    """
-
     return render_template("index.html")
 
 
 # ============================================================
-# SUBMIT STUDENT RESULT FROM HTML FORM
+# SUBMIT STUDENT RESULT
+# HTML FORM → FLASK → SQLITE → RESULT HTML
 # ============================================================
 
 @app.route("/submit", methods=["POST"])
@@ -112,39 +70,36 @@ def submit():
     try:
 
         # ----------------------------------------------------
-        # Receive data from HTML form
+        # 1. Get data from HTML form
         # ----------------------------------------------------
 
         name = request.form.get("name")
+
         marks1 = request.form.get("marks1")
         marks2 = request.form.get("marks2")
         marks3 = request.form.get("marks3")
 
         # ----------------------------------------------------
-        # Validate student name
+        # 2. Validate student name
         # ----------------------------------------------------
 
         if not name or not name.strip():
 
-            return jsonify({
-                "error": "Student name is required."
-            }), 400
+            return "Student name is required.", 400
 
         # ----------------------------------------------------
-        # Convert marks from HTML strings to integers
+        # 3. Convert marks from HTML strings to numbers
         # ----------------------------------------------------
 
         try:
 
-            marks1 = int(marks1)
-            marks2 = int(marks2)
-            marks3 = int(marks3)
+            marks1 = float(marks1)
+            marks2 = float(marks2)
+            marks3 = float(marks3)
 
         except (ValueError, TypeError):
 
-            return jsonify({
-                "error": "All marks must be valid numbers."
-            }), 400
+            return "Marks must be valid numbers.", 400
 
         marks = [
             marks1,
@@ -153,17 +108,15 @@ def submit():
         ]
 
         # ----------------------------------------------------
-        # Validate marks
+        # 4. Validate marks
         # ----------------------------------------------------
 
         if not validate_marks(marks):
 
-            return jsonify({
-                "error": "Marks must be between 0 and 100."
-            }), 400
+            return "Marks must be between 0 and 100.", 400
 
         # ----------------------------------------------------
-        # Business Logic
+        # 5. Business Logic
         # ----------------------------------------------------
 
         total = calculate_total(marks)
@@ -176,7 +129,7 @@ def submit():
         grade = calculate_grade(percentage)
 
         # ----------------------------------------------------
-        # Store result in SQLite database
+        # 6. Save to Author 3's SQLite database
         # ----------------------------------------------------
 
         add_student(
@@ -189,192 +142,35 @@ def submit():
         )
 
         # ----------------------------------------------------
-        # Return result
+        # 7. Prepare result for HTML page
         # ----------------------------------------------------
 
-        return jsonify({
-
-            "message": "Student result added successfully.",
-
-            "student": {
-                "name": name,
-                "marks1": marks1,
-                "marks2": marks2,
-                "marks3": marks3,
-                "total": total,
-                "percentage": round(percentage, 2),
-                "grade": grade
-            }
-
-        }), 201
-
-    except Exception as error:
-
-        return jsonify({
-            "error": "Unable to process student result.",
-            "details": str(error)
-        }), 500
-
-
-# ============================================================
-# GET ALL STUDENTS
-# ============================================================
-
-@app.route("/students", methods=["GET"])
-def students():
-
-    try:
-
-        records = get_students()
-
-        student_list = []
-
-        for record in records:
-
-            student_list.append({
-
-                "id": record[0],
-
-                "name": record[1],
-
-                "marks1": record[2],
-
-                "marks2": record[3],
-
-                "marks3": record[4],
-
-                "total": record[5],
-
-                "grade": record[6]
-
-            })
-
-        return jsonify({
-
-            "message": "Students retrieved successfully.",
-
-            "students": student_list
-
-        }), 200
-
-    except Exception as error:
-
-        return jsonify({
-
-            "error": "Unable to retrieve students.",
-
-            "details": str(error)
-
-        }), 500
-
-
-# ============================================================
-# CALCULATE RESULT
-# ============================================================
-
-@app.route("/calculate-result", methods=["POST"])
-def calculate_result():
-
-    try:
+        student = {
+            "name": name,
+            "marks1": marks1,
+            "marks2": marks2,
+            "marks3": marks3,
+            "total": total,
+            "percentage": round(percentage, 2),
+            "grade": grade
+        }
 
         # ----------------------------------------------------
-        # Support HTML form data
+        # 8. Display HTML result page
         # ----------------------------------------------------
 
-        if request.form:
-
-            name = request.form.get("name")
-
-            marks1 = request.form.get("marks1")
-            marks2 = request.form.get("marks2")
-            marks3 = request.form.get("marks3")
-
-        # ----------------------------------------------------
-        # Also support JSON requests if needed
-        # ----------------------------------------------------
-
-        else:
-
-            data = request.get_json(silent=True)
-
-            if not data:
-
-                return jsonify({
-                    "error": "No data received."
-                }), 400
-
-            name = data.get("name")
-
-            marks = data.get("marks")
-
-            if isinstance(marks, list) and len(marks) == 3:
-
-                marks1 = marks[0]
-                marks2 = marks[1]
-                marks3 = marks[2]
-
-            else:
-
-                marks1 = data.get("marks1")
-                marks2 = data.get("marks2")
-                marks3 = data.get("marks3")
-
-        # ----------------------------------------------------
-        # Convert marks
-        # ----------------------------------------------------
-
-        try:
-
-            marks1 = int(marks1)
-            marks2 = int(marks2)
-            marks3 = int(marks3)
-
-        except (ValueError, TypeError):
-
-            return jsonify({
-                "error": "All marks must be valid numbers."
-            }), 400
-
-        marks = [
-            marks1,
-            marks2,
-            marks3
-        ]
-
-        # ----------------------------------------------------
-        # Process result
-        # ----------------------------------------------------
-
-        result = process_result(
-            name,
-            marks
+        return render_template(
+            "result.html",
+            student=student
         )
 
-        return jsonify({
-
-            "message": "Result calculated successfully.",
-
-            "result": result
-
-        }), 200
-
-    except ValueError as error:
-
-        return jsonify({
-
-            "error": str(error)
-
-        }), 400
-
     except Exception as error:
 
-        return jsonify({
-
-            "error": "Internal server error.",
-
-            "details": str(error)
-
-        }), 500
+        return f"""
+        <h2>Error processing result</h2>
+        <p>{error}</p>
+        <a href="/">Go Back</a>
+        """, 500
 
 
 # ============================================================
@@ -383,7 +179,9 @@ def calculate_result():
 
 if __name__ == "__main__":
 
-    # Create database/table if it does not already exist
+    # Create SQLite database and students table
+    # using Author 3's database.py
     create_database()
 
+    # Start Flask server
     app.run(debug=True)
